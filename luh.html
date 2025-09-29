@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My Love 19th Birthday</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;700&family=Fredoka+One&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #e3f2fd;
+  font-family: 'Quicksand', sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.book {
+  width: 90%;
+  max-width: 700px;
+  height: 85%;
+  position: relative;
+  perspective: 2000px;
+  background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(219, 112, 147, 0.5);
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.page {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0; left: 0;
+  background: #ffffffcc;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  padding: 30px 40px 40px 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: background-color 0.4s ease;
+  user-select: none;
+}
+.page.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.page.slide-in-right {
+  animation: slideInFromRight 0.8s forwards;
+}
+.page.slide-out-left {
+  animation: slideOutToLeft 0.8s forwards;
+}
+.page.slide-in-left {
+  animation: slideInFromLeft 0.8s forwards;
+}
+.page.slide-out-right {
+  animation: slideOutToRight 0.8s forwards;
+}
+
+@keyframes slideInFromRight {
+  from { transform: translateX(100%) rotateY(-20deg); opacity: 0; }
+  to { transform: translateX(0) rotateY(0); opacity: 1; }
+}
+@keyframes slideOutToLeft {
+  from { transform: translateX(0) rotateY(0); opacity: 1; }
+  to { transform: translateX(-100%) rotateY(20deg); opacity: 0; }
+}
+@keyframes slideInFromLeft {
+  from { transform: translateX(-100%) rotateY(20deg); opacity: 0; }
+  to { transform: translateX(0) rotateY(0); opacity: 1; }
+}
+@keyframes slideOutToRight {
+  from { transform: translateX(0) rotateY(0); opacity: 1; }
+  to { transform: translateX(100%) rotateY(-20deg); opacity: 0; }
+}
+
+/* Navigation buttons only on first page */
+.nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #bbdefb;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 14px 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  z-index: 20;
+  color: #0d47a1;
+  user-select: none;
+}
+#prevBtn { left: 2%; }
+#nextBtn { right: 2%; }
+.nav-button:hover { transform: scale(1.3); background-color: #90caf9; }
+.nav-button[disabled] {
+  cursor: default;
+  opacity: 0.4;
+  transform: none;
+}
+
+/* Polaroid container for pages 1-4 */
+.polaroid-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: nowrap;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 700px;
+}
+.polaroid {
+  background: #fff;
+  padding: 10px 10px 30px 10px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  width: 140px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.25s ease;
+  position: relative;
+}
+.polaroid img {
+  width: 120px;
+  height: 120px;
+  border-radius: 10px;
+  object-fit: cover;
+  user-select: none;
+}
+.polaroid:hover, .polaroid:focus {
+  transform: scale(1.1);
+  box-shadow: 0 10px 30px rgba(216,27,96,0.5);
+  outline: none;
+}
+.polaroid .caption {
+  margin-top: 8px;
+  font-size: 1em;
+  color: #d81b60;
+  user-select: none;
+  font-weight: 700;
+}
+
+/* Messages below photos on pages 1-4 */
+.page-message {
+  width: 90%;
+  max-width: 600px;
+  background: rgba(216, 27, 96, 0.15);
+  border-radius: 15px;
+  padding: 20px 25px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3em;
+  color: #d81b60;
+  text-align: center;
+  box-sizing: border-box;
+  margin: 0 auto;
+  white-space: pre-wrap;
+  user-select: text;
+  min-height: 60px;
+}
+
+/* First page greeting styles */
+#page0 h1.greeting {
+  font-family: 'Pacifico', cursive;
+  color: #d81b60;
+  margin-bottom: 25px;
+  user-select: none;
+}
+#page0-message {
+  width: 90%;
+  max-width: 600px;
+  background: rgba(216, 27, 96, 0.15);
+  border-radius: 15px;
+  padding: 20px 25px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3em;
+  color: #d81b60;
+  text-align: center;
+  box-sizing: border-box;
+  min-height: 80px;
+  margin: 0 auto;
+  white-space: pre-wrap;
+  outline: none;
+  user-select: text;
+  cursor: text;
+}
+
+/* Scrollbar styling */
+.page::-webkit-scrollbar {
+  width: 8px;
+}
+.page::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+.page::-webkit-scrollbar-thumb {
+  background: #d81b60cc;
+  border-radius: 10px;
+}
+.page::-webkit-scrollbar-thumb:hover {
+  background: #d81b60;
+}
+
+/* Page 5 - Heartfelt message with landscape pic */
+#page5 .heartfelt-img {
+  width: 90%;
+  max-width: 650px;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(216,27,96,0.5);
+  margin-bottom: 25px;
+  user-select: none;
+}
+
+/* Page 5 message */
+#page5 .heartfelt-message {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.4em;
+  color: #d81b60;
+  background: rgba(216, 27, 96, 0.15);
+  border-radius: 15px;
+  padding: 25px 30px;
+  max-width: 650px;
+  margin: 0 auto 20px auto;
+  white-space: pre-wrap;
+  user-select: text;
+}
+
+/* Page 6 - Video page styles */
+#page6 video {
+  width: 90%;
+  max-width: 650px;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(216,27,96,0.7);
+  margin-bottom: 20px;
+  user-select: none;
+}
+
+#page6 .video-message {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3em;
+  color: #d81b60;
+  background: rgba(216, 27, 96, 0.15);
+  border-radius: 15px;
+  padding: 15px 25px;
+  max-width: 650px;
+  margin: 0 auto;
+  white-space: pre-wrap;
+  user-select: none;
+}
+
+/* Stickers for page 6 */
+#page6 .stickers {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 12px;
+  user-select: none;
+  pointer-events: none;
+  z-index: 15;
+}
+#page6 .stickers img {
+  width: 45px;
+  height: 45px;
+  opacity: 0.8;
+  transform: rotate(-15deg);
+  filter: drop-shadow(0 0 3px #d81b60aa);
+}
+
+/* On page 5 & 6, whole page clickable to advance */
+.page.clickable {
+  cursor: pointer;
+}
+/* On page 5 & 6, whole page clickable to advance */
+.page.clickable {
+  cursor: pointer;
+}
+
+/* Enlarged polaroid frame and photo size for pages 1 to 4 */
+#page1 .polaroid,
+#page2 .polaroid,
+#page3 .polaroid,
+#page4 .polaroid {
+  width: 250px;
+}
+
+#page1 .polaroid img,
+#page2 .polaroid img,
+#page3 .polaroid img,
+#page4 .polaroid img {
+  width: 230px;
+  height: 230px;
+}
+/* Animated floating hearts background */
+.heart-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.heart {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #f06292;
+  transform: rotate(45deg);
+  animation: floatHeart 8s linear infinite;
+  opacity: 0.6;
+}
+
+.heart::before,
+.heart::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #f06292;
+  border-radius: 50%;
+}
+
+.heart::before {
+  top: -10px;
+  left: 0;
+}
+.heart::after {
+  left: -10px;
+  top: 0;
+}
+
+@keyframes floatHeart {
+  0% {
+    transform: translateY(100vh) rotate(45deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-10vh) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+</style>
+
+
+</style>
+</head>
+<body>
+
+<body>
+
+<!-- 🩷 Heart Background -->
+<div class="heart-bg" aria-hidden="true">
+  <!-- Hearts float up from different spots with staggered delays -->
+  <div class="heart" style="left: 10%; animation-delay: 0s;"></div>
+  <div class="heart" style="left: 25%; animation-delay: 2s;"></div>
+  <div class="heart" style="left: 40%; animation-delay: 4s;"></div>
+  <div class="heart" style="left: 55%; animation-delay: 1s;"></div>
+  <div class="heart" style="left: 70%; animation-delay: 3s;"></div>
+  <div class="heart" style="left: 85%; animation-delay: 5s;"></div>
+</div>
+
+<div class="book" role="main" aria-lab
+
+
+<div class="book" role="main" aria-label="Personalized Scrapbook Flipbook">
+
+  <!-- PAGE 0: First page -->
+  <div class="page show" id="page0" aria-live="polite" aria-atomic="true">
+    <h1 class="greeting" aria-label="Greeting Message">Happy Birthday My Love!</h1>
+    <div id="greeting-message" aria-label="Greeting Description">
+      Welcome! Here's to the wonderful moments we've shared together.
+    </div>
+    <div class="polaroid-container polaroid-container-page0" aria-label="Polaroid Photos">
+      <div class="polaroid" tabindex="0">
+        <img src="pic1.jpg" alt="Photo 1" />
+        <div class="caption">Photo 1</div>
+      </div>
+      <div class="polaroid" tabindex="0">
+        <img src="pic2.jpg" alt="Photo 2" />
+        <div class="caption">Photo 2</div>
+      </div>
+      <div class="polaroid" tabindex="0">
+        <img src="pic3.jpg" alt="Photo 3" />
+        <div class="caption">Photo 3</div>
+      </div>
+      <div class="polaroid" tabindex="0">
+        <img src="pic4.jpg" alt="Photo 4" />
+        <div class="caption">Photo 4</div>
+      </div>
+      <div class="polaroid" tabindex="0">
+        <img src="pic5.jpg" alt="Photo 5" />
+        <div class="caption">Photo 5</div>
+      </div>
+    </div>
+    <div
+      id="page0-message"
+      contenteditable="true"
+      spellcheck="false"
+      aria-label="Enter your heartfelt message here"
+      role="textbox"
+      tabindex="0"
+      >This is just a simple presentation that i made for you my love.</div
+    >
+  </div>
+
+  <!-- PAGES 1 TO 4: 2-3 pictures + message below -->
+  <div class="page" id="page1" aria-hidden="true" aria-live="polite" aria-atomic="true">
+    <div class="polaroid-container">
+      <div class="polaroid" tabindex="0" data-target="2">
+        <img src="pic6.jpg" alt="Photo 6" />
+        <div class="caption">Night at the Beach</div>
+      </div>
+      <div class="polaroid" tabindex="0" data-target="2">
+        <img src="pic7.jpg" alt="Photo 7" />
+        <div class="caption">Sunset Views</div>
+      </div>
+    </div>
+    <div class="page-message">Remembering that beautiful night at the beach with you.How we cherish each other.</div>
+  </div>
+
+  <div class="page" id="page2" aria-hidden="true" aria-live="polite" aria-atomic="true">
+    <div class="polaroid-container">
+      <div class="polaroid" tabindex="0" data-target="3">
+        <img src="pic8.jpg" alt="Photo 8" />
+        <div class="caption">Grad Day</div>
+      </div>
+      <div class="polaroid" tabindex="0" data-target="3">
+        <img src="pic4.jpg" alt="Photo 9" />
+        <div class="caption">The Rainy Night</div>
+      </div>
+      <div class="polaroid" tabindex="0" data-target="3">
+        <img src="pic10.jpg" alt="Photo 10" />
+        <div class="caption">Make up Day</div>
+      </div>
+    </div>
+    <div class="page-message">We've come so far hon, and I'm thankful na laging kang nandyan.</div>
+  </div>
+
+  <div class="page" id="page3" aria-hidden="true" aria-live="polite" aria-atomic="true">
+    <div class="polaroid-container">
+      <div class="polaroid" tabindex="0" data-target="4">
+        <img src="pic11.jpg" alt="Photo 11" />
+        <div class="caption">Rotc Days</div>
+      </div>
+      <div class="polaroid" tabindex="0" data-target="4">
+        <img src="pic12.jpg" alt="Photo 12" />
+        <div class="caption">First Beach Together</div>
+      </div>
+    </div>
+    <div class="page-message">Those magical times, na akala natin di natin kakayanin but look love oh!</div>
+  </div>
+
+  <div class="page" id="page4" aria-hidden="true" aria-live="polite" aria-atomic="true">
+    <div class="polaroid-container">
+      <div class="polaroid" tabindex="0" data-target="5">
+        <img src="pic13.jpg" alt="Photo 13" />
+        <div class="caption">Sunset picnic at Calab</div>
+      </div>
+      <div class="polaroid" tabindex="0" data-target="5">
+        <img src="pic14.jpg" alt="Photo 14" />
+        <div class="caption">Sunrise with you</div>
+      </div>
+      <div class="polaroid" tabindex="0" data-target="5">
+        <img src="pic15.jpg" alt="Photo 15" />
+        <div class="caption">Long Rides</div>
+      </div>
+    </div>
+    <div class="page-message">Mga experience na akala ko before hindi na natin magagawa.</div>
+  </div>
+
+  <!-- PAGE 5: Heartfelt message + landscape photo on top -->
+  <div class="page clickable" id="page5" aria-hidden="true" aria-live="polite" aria-atomic="true" tabindex="0" role="button" aria-label="Heartfelt message page, click to continue">
+    <img
+      class="heartfelt-img"
+      src="pic16.jpg"
+      alt="Heartfelt landscape photo of us"
+      draggable="false"
+    />
+    <div class="heartfelt-message" contenteditable="true" spellcheck="false" aria-label="Write your heartfelt message here" role="textbox" tabindex="0">
+     
+
+Happy 19th Birthday, Love! 🎉❤️
+
+Another year has passed, and honestly, you still make my heart skip a beat just like the very first time. We’ve shared so many memories together—those long rides where sometimes we’d get caught in the rain or get stuck under the blazing sun, the countless times we ate out and laughed until our stomachs hurt, and yes, even the fights that made us stronger in the end.
+
+Thank you for choosing to stay with me through everything. Thank you for loving me, even when I’m a handful. I’m so grateful that you’re by my side, that you’re in love with me, and that we get to share this crazy, beautiful journey together.
+
+I hope you achieve all your dreams and aspirations because you truly deserve it. Please keep smiling that amazing smile of yours—it’s one of the many reasons why I’m head over heels for you. Honestly, you’re not just handsome, you’re also the kindest, most wonderful person in my life, and I’m so lucky to have you.
+
+You mean the world to me, and I promise to always support you and love you no matter what. Here’s to more rides, more food trips, more memories, and more love.
+
+Happy birthday again, my love. I love you so much! 💖🎂
+
+
+
+    </div>
+  </div>
+
+  <!-- PAGE 6: Video + short message + stickers -->
+  <div class="page clickable" id="page6" aria-hidden="true" aria-live="polite" aria-atomic="true" tabindex="0" role="button" aria-label="Video message page, click to continue">
+    <div class="stickers" aria-hidden="true">
+      <img src="pic2.jpg" alt="" />
+      <img src="pic1.jpg" alt="" />
+      <img src="pic4.jpg" alt="" />
+    </div>
+    <video controls preload="metadata" aria-label="Video of our special moment">
+      <source src="vid1.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <div class="video-message">
+      Here’s a special video capturing one of our most beautiful moments together. 
+	  I love you, my John Lourick Veral Escorido.
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation buttons only on first page -->
+<button class="nav-button" id="prevBtn" aria-label="Previous Page" disabled>&lt;</button>
+<button class="nav-button" id="nextBtn" aria-label="Next Page">&gt;</button>
+
+<script>
+(() => {
+  const pages = document.querySelectorAll('.page');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  let currentPage = 0;
+
+  function updateButtons() {
+    if (currentPage === 0) {
+      prevBtn.style.display = 'block';
+      nextBtn.style.display = 'block';
+      prevBtn.disabled = true;
+      nextBtn.disabled = pages.length <= 1;
+    } else {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+    }
+  }
+
+  function showPage(index, direction) {
+    if (index === currentPage) return;
+    if (index < 0) index = 0;
+    if (index >= pages.length) index = pages.length - 1;
+
+    const oldPage = pages[currentPage];
+    const newPage = pages[index];
+
+    if (direction === 'next') {
+      oldPage.classList.add('slide-out-left');
+      newPage.classList.add('slide-in-right');
+    } else {
+      oldPage.classList.add('slide-out-right');
+      newPage.classList.add('slide-in-left');
+    }
+
+    newPage.classList.add('show');
+    newPage.setAttribute('aria-hidden', 'false');
+    oldPage.setAttribute('aria-hidden', 'true');
+
+    function cleanup() {
+      oldPage.classList.remove('show', 'slide-out-left', 'slide-out-right');
+      newPage.classList.remove('slide-in-left', 'slide-in-right');
+      oldPage.removeEventListener('animationend', cleanup);
+    }
+    oldPage.addEventListener('animationend', cleanup);
+
+    currentPage = index;
+    updateButtons();
+  }
+
+  prevBtn.addEventListener('click', () => {
+    if (currentPage > 0) {
+      showPage(currentPage - 1, 'prev');
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentPage < pages.length - 1) {
+      showPage(currentPage + 1, 'next');
+    }
+  });
+
+  // On pages 1-4, clicking polaroid advances
+  function onPolaroidClick(e) {
+    if (currentPage !== 0 && currentPage < pages.length - 2) {
+      let next = currentPage + 1;
+      showPage(next, 'next');
+    }
+  }
+
+  for (let i = 1; i <= 4; i++) {
+    const polaroids = pages[i].querySelectorAll('.polaroid');
+    polaroids.forEach(polaroid => {
+      polaroid.addEventListener('click', onPolaroidClick);
+      polaroid.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onPolaroidClick();
+        }
+      });
+    });
+  }
+
+  // On page 5 & 6 (heartfelt & video) clicking anywhere advances to next or loops
+  const page5 = document.getElementById('page5');
+  const page6 = document.getElementById('page6');
+
+  function advanceFromPage5() {
+    showPage(6, 'next');
+  }
+  function advanceFromPage6() {
+    showPage(0, 'next');
+  }
+
+  page5.addEventListener('click', advanceFromPage5);
+  page5.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      advanceFromPage5();
+    }
+  });
+
+  page6.addEventListener('click', advanceFromPage6);
+  page6.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      advanceFromPage6();
+    }
+  });
+
+  updateButtons();
+
+  // Focus first nav button on load
+  prevBtn.focus();
+})();
+</script>
+
+</body>
+</html>
